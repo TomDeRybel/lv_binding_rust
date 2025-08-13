@@ -109,6 +109,14 @@ unsafe extern "C" fn read_input<F>(
 ) where
     F: Fn() -> BufferStatus,
 {
+    // HACK For some reason, (*data).state never changes from zero (released)
+    // HACK when it gets to lv_indev.c L64 lv_indev_read_timer_cb(). I've used
+    // HACK the "key" field to pass the same information, as I'm not using that
+    // HACK in my application. The lv_indev_read_timer_cb() call-back was then
+    // HACK modified to mirror the "key" information onto the data.state" field
+    // HACK (over-writing it), at L96. And that works. But: the root-cause is
+    // HACK still unknown!
+
     // convert user data to function
     let user_closure = &mut *((*indev_drv).user_data as *mut F);
     // call user data
@@ -126,6 +134,9 @@ unsafe extern "C" fn read_input<F>(
                             Data::Pointer(PointerInputData::Key(_)) => {}
                             _ => panic!("Non-pointer data returned from pointer device!"),
                         }
+                        // HACK: pass the "pressed" state via the "key".
+                        (*data).key = lvgl_sys::lv_indev_state_t_LV_INDEV_STATE_PRESSED;
+
                         lvgl_sys::lv_indev_state_t_LV_INDEV_STATE_PRESSED
                     }
                     InputState::Released(d) => {
@@ -137,6 +148,9 @@ unsafe extern "C" fn read_input<F>(
                             Data::Pointer(PointerInputData::Key(_)) => {}
                             _ => panic!("Non-pointer data returned from pointer device!"),
                         }
+                        // HACK: pass the "released" state via the "key".
+                        (*data).key = lvgl_sys::lv_indev_state_t_LV_INDEV_STATE_RELEASED;
+
                         lvgl_sys::lv_indev_state_t_LV_INDEV_STATE_RELEASED
                     }
                 };
@@ -153,6 +167,9 @@ unsafe extern "C" fn read_input<F>(
                             Data::Pointer(PointerInputData::Key(_)) => {}
                             _ => panic!("Non-pointer data returned from pointer device!"),
                         }
+                        // HACK: pass the "pressed" state via the "key".
+                        (*data).key = lvgl_sys::lv_indev_state_t_LV_INDEV_STATE_PRESSED;
+
                         lvgl_sys::lv_indev_state_t_LV_INDEV_STATE_PRESSED
                     }
                     InputState::Released(d) => {
@@ -164,6 +181,9 @@ unsafe extern "C" fn read_input<F>(
                             Data::Pointer(PointerInputData::Key(_)) => {}
                             _ => panic!("Non-pointer data returned from pointer device!"),
                         }
+                        // HACK: pass the "released" state via the "key".
+                        (*data).key = lvgl_sys::lv_indev_state_t_LV_INDEV_STATE_RELEASED;
+
                         lvgl_sys::lv_indev_state_t_LV_INDEV_STATE_RELEASED
                     }
                 };
