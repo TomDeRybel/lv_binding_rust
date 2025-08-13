@@ -165,12 +165,16 @@ fn main() {
 
     cfg.compile("lvgl");
 
+    // Modified for cross-compilation, according to:
+    // <https://github.com/lvgl/lv_binding_rust/issues/194>
     let mut cc_args = vec![
         "-DLV_CONF_INCLUDE_SIMPLE=1",
         "-I",
         lv_config_dir.to_str().unwrap(),
         "-I",
         vendor.to_str().unwrap(),
+        "-I",                             // Added
+        "/usr/lib/arm-none-eabi/include", // Added
         "-fvisibility=default",
     ];
 
