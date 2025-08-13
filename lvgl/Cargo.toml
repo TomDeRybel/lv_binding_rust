@@ -88,13 +88,13 @@ unsafe_no_autoinit = []
 custom_allocator = []
 
 [build-dependencies]
-quote = "1.0.23"
-proc-macro2 = "1.0.51"
+quote = "1.0.40"
+proc-macro2 = "1.0.97"
 lvgl-codegen = { version = "0.6.2", path = "../lvgl-codegen" }
 lvgl-sys = { version = "0.6.2", path = "../lvgl-sys" }
 
 [dev-dependencies]
-embedded-graphics-simulator = "0.5.0"
+embedded-graphics-simulator = "0.7.0"
 
 [[example]]
 name = "app"
