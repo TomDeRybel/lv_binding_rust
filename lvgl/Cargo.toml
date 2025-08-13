@@ -17,7 +17,10 @@ build = "build.rs"
 [dependencies]
 lvgl-sys = { version = "0.6.2", path = "../lvgl-sys" }
 cty = "0.2.2"
-embedded-graphics = { version = "0.8.1", optional = true }
+#embedded-graphics = { version = "0.8.1", optional = true }
+embedded-graphics = { git = "https://github.com/TomDeRybel/embedded-graphics.git", optional = true, features = [
+    "async_draw",
+] }
 cstr_core = { version = "0.2.6", default-features = false, features = [
     "alloc",
 ] }
