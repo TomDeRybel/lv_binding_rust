@@ -2,7 +2,10 @@
 name = "lvgl"
 description = "LVGL bindings for Rust. A powerful and easy-to-use embedded GUI with many widgets, advanced visual effects (opacity, antialiasing, animations) and low memory requirements (16K RAM, 64K Flash)."
 version = "0.6.2"
-authors = ["Rafael Caricio <crates.lvgl@caric.io>", "Nia Espera <a5b6@riseup.net>"]
+authors = [
+    "Rafael Caricio <crates.lvgl@caric.io>",
+    "Nia Espera <a5b6@riseup.net>",
+]
 edition = "2021"
 repository = "https://github.com/rafaelcaricio/lvgl-rs"
 license = "MIT"
@@ -14,11 +17,13 @@ build = "build.rs"
 [dependencies]
 lvgl-sys = { version = "0.6.2", path = "../lvgl-sys", features = ["library"] }
 cty = "0.2.2"
-embedded-graphics = { version = "0.8.0", optional = true }
-cstr_core = { version = "0.2.6", default-features = false, features = ["alloc"] }
-bitflags = "2.3.2"
-paste = "1.0.12"
-ctor = "0.2.2"
+embedded-graphics = { version = "0.8.1", optional = true }
+cstr_core = { version = "0.2.6", default-features = false, features = [
+    "alloc",
+] }
+bitflags = "2.9.2"
+paste = "1.0.15"
+ctor = "0.2.9"
 
 [features]
 default = ["embedded_graphics", "drivers"]
@@ -80,13 +85,15 @@ unsafe_no_autoinit = []
 custom_allocator = []
 
 [build-dependencies]
-quote = "1.0.23"
-proc-macro2 = "1.0.51"
+quote = "1.0.40"
+proc-macro2 = "1.0.101"
 lvgl-codegen = { version = "0.6.2", path = "../lvgl-codegen" }
-lvgl-sys = { version = "0.6.2", path = "../lvgl-sys", features = ["raw-bindings"] }
+lvgl-sys = { version = "0.6.2", path = "../lvgl-sys", features = [
+    "raw-bindings",
+] }
 
 [dev-dependencies]
-embedded-graphics-simulator = "0.5.0"
+embedded-graphics-simulator = "0.7.0"
 
 [[example]]
 name = "app"
