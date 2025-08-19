@@ -23,8 +23,8 @@ cstr_core = { version = "0.2.6", default-features = false, features = [
 ] }
 bitflags = "2.9.2"
 paste = "1.0.15"
-#ctor = "0.2.9"  // Note: the 0.5.0 didn't work with no_std before. The last revision of the 0.2.x series does.
-ctor = "0.5.0"
+ctor = "0.2.9"
+#ctor = "0.5.0" // ctor more recent then 0.2.9 does not work with no_std targets.
 
 [features]
 default = ["embedded_graphics", "drivers"]
