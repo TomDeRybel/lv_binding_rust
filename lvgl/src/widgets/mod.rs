@@ -5,6 +5,9 @@
 //! widget with no parent will have a screen as its parent. Style data is
 //! inherited from parent objects by default.
 
+// TODO: silence "unused import" warnings for now.
+#![allow(unused_imports)]
+
 mod arc;
 mod bar;
 mod keyboard;
