@@ -62,7 +62,7 @@ fn main() -> Result<(), LvError> {
     arc.set_end_angle(135);
 
     let mut loading_lbl = Label::create(&mut screen)?;
-    loading_lbl.set_text(CString::new("Loading...").unwrap().as_c_str())?;
+    loading_lbl.set_text(CString::new("Loading...").unwrap().as_c_str());
     loading_lbl.set_align(Align::OutTopMid, 0, 0);
     //loading_lbl.set_label_align(LabelAlign::Center)?;
 
@@ -82,7 +82,7 @@ fn main() -> Result<(), LvError> {
             println!("mem info running: {:?}", mem_info());
         }
         angle = if forward { angle + 1 } else { angle - 1 };
-        arc.set_end_angle(angle + 135)?;
+        arc.set_end_angle(angle + 135);
         i += 1;
 
         lvgl::task_handler();
