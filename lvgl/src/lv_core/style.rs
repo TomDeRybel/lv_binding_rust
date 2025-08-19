@@ -22,6 +22,9 @@ use core::mem::{self, MaybeUninit};
 use cty::c_uint;
 use paste::paste;
 
+#[cfg(feature = "lvgl_alloc")]
+use crate::sys::lv_style_t;
+
 pub enum Themes {
     Pretty,
 }
@@ -455,9 +458,21 @@ impl Style {
         };
 
         let ptr = raw_ret.as_mut_ptr() as *mut _;
+
+        #[cfg(not(feature = "lvgl_alloc"))]
         let result = unsafe {
             lvgl_sys::lv_style_get_prop(self.raw.clone().into_raw() as *const _, prop.bits(), ptr)
         };
+
+        #[cfg(feature = "lvgl_alloc")]
+        let result = unsafe {
+            lvgl_sys::lv_style_get_prop(
+                Box::<lv_style_t>::into_raw(self.raw.clone()) as *const _,
+                prop.bits(),
+                ptr,
+            )
+        };
+
         let raw_ret = unsafe { raw_ret.assume_init() };
         if <u8 as Into<u32>>::into(result) == lvgl_sys::LV_RES_OK {
             unsafe {
