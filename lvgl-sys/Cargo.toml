@@ -31,8 +31,8 @@ name = "lvgl_sys"
 cty = "0.2.2"
 
 [build-dependencies]
-cc = "1.2.33"
-bindgen = "0.72.0"
+cc = "1.2.35"
+bindgen = "0.72.1"
 
 [features]
 library = []
