@@ -171,19 +171,6 @@ unsafe extern "C" fn read_input<F>(
             }
         }
     }
-
-    // HACK For some reason, (*data).state never changes from zero (released)
-    // HACK when it gets to lv_indev.c L64: lv_indev_read_timer_cb(). I've used
-    // HACK the "key" field to pass the same information, as I'm not using that
-    // HACK in my application. The lv_indev_read_timer_cb() call-back was then
-    // HACK modified to mirror the "key" information onto the data.state" field
-    // HACK (over-writing it), at L96. And that works. But: the root-cause is
-    // HACK still unknown!
-    // HACK
-    // HACK: Pass the InputState via the "key" field.
-    unsafe {
-        (*data).key = (*data).state;
-    }
 }
 
 unsafe extern "C" fn feedback(_indev_drv: *mut lvgl_sys::lv_indev_drv_t, _code: u8) {}
