@@ -1,7 +1,7 @@
 use crate::functions::CoreError;
-use crate::Screen;
 use crate::{disp_drv_register, disp_get_default, get_str_act, NativeObject};
 use crate::{Box, Color};
+use crate::{Obj, Screen, Widget};
 use core::convert::TryInto;
 #[cfg(feature = "nightly")]
 use core::error::Error;
@@ -71,7 +71,7 @@ impl<'a> Display {
         //display_diver.disp_drv.leak();
     }
 
-    /// Returns the current active screen.
+    /// Returns the currently-active screen.
     pub fn get_scr_act(&'a self) -> Result<Screen<'a>> {
         Ok(get_str_act(Some(self))?.try_into()?)
     }
@@ -80,6 +80,34 @@ impl<'a> Display {
     pub fn set_scr_act(&'a self, screen: &'a mut Screen) {
         let scr_ptr = unsafe { screen.raw().as_mut() };
         unsafe { lvgl_sys::lv_disp_load_scr(scr_ptr) }
+    }
+
+    /// Get the top layer for this display.
+    pub fn get_layer_top(&'a self) -> Result<Obj<'a>> {
+        unsafe {
+            // Safety: the disp pointer is NonNull.
+            let top_layer = lvgl_sys::lv_disp_get_layer_top(self.disp.as_ptr());
+
+            // Safety: the layer pointer is verified NonNull.
+            match Obj::from_raw(NonNull::new(top_layer).ok_or(DisplayError::NotAvailable)?) {
+                Some(o) => Ok(o),
+                None => Err(DisplayError::FailedToRegister),
+            }
+        }
+    }
+
+    /// Get the system layer for this display.
+    pub fn get_layer_sys(&'a self) -> Result<Obj<'a>> {
+        unsafe {
+            // Safety: the disp pointer is NonNull.
+            let sys_layer = lvgl_sys::lv_disp_get_layer_sys(self.disp.as_ptr());
+
+            // Safety: the layer pointer is verified NonNull.
+            match Obj::from_raw(NonNull::new(sys_layer).ok_or(DisplayError::NotAvailable)?) {
+                Some(o) => Ok(o),
+                None => Err(DisplayError::FailedToRegister),
+            }
+        }
     }
 
     /// Registers a display from raw functions and values.
