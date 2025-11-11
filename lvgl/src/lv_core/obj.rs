@@ -6,7 +6,7 @@
 //! `NativeObject`.
 
 use crate::lv_core::style::Style;
-use crate::{Align, LvError, LvResult};
+use crate::{Align, LvError, LvResult, ObjFlag};
 use core::fmt::{self, Debug};
 use core::marker::PhantomData;
 use core::ptr::{self, NonNull};
@@ -146,6 +146,28 @@ pub trait Widget<'a>: NativeObject + Sized + 'a {
                 align.into(),
                 x_mod as lvgl_sys::lv_coord_t,
                 y_mod as lvgl_sys::lv_coord_t,
+            );
+        }
+    }
+
+    /// Tests if a widget has the specified object flag set.
+    fn has_flag(&self, flag: ObjFlag) -> bool {
+        unsafe { lvgl_sys::lv_obj_has_flag(self.raw().as_ref(), flag.into()) }
+    }
+
+    /// Add the specified object flag to the widget's existing flags.
+    fn add_flag(&mut self, flag: ObjFlag) {
+        unsafe {
+            lvgl_sys::lv_obj_add_flag(self.raw().as_mut() as *mut lvgl_sys::lv_obj_t, flag.into());
+        }
+    }
+
+    /// Remove the specified object flag from the widget's existing flags.
+    fn remove_flag(&mut self, flag: ObjFlag) {
+        unsafe {
+            lvgl_sys::lv_obj_clear_flag(
+                self.raw().as_mut() as *mut lvgl_sys::lv_obj_t,
+                flag.into(),
             );
         }
     }

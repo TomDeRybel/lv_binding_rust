@@ -399,6 +399,129 @@ impl From<LabelLongMode> for u8 {
     }
 }
 
+/// Possible LVGL object flags.
+///
+/// This enum contains all LV_OBJ_FLAGS defined in "lvgl-sys/bindings.rs".
+///
+/// The flags are conceived as bit fields of a 32-bit word, and can thus be
+/// logically combined via boolean operations.
+///
+/// For more detailed information on the flags, see:
+/// <https://docs.lvgl.io/master/details/common-widget-features/flags.html>
+///
+/// Note: not all LVGL V9 flags are available in the old LVGL V8 used here.
+///       Those flags are left commented-out.
+#[derive(Debug, Copy, Clone, Ord, PartialOrd, Eq, PartialEq)]
+pub enum ObjFlag {
+    /// Make the widget hidden (as if it weren’t there at all).
+    Hidden,
+    /// Make the widget clickable by input devices.
+    Clickable,
+    /// Add the focused state to the widget when clicked.
+    ClickFocusable,
+    /// Toggle the checked state when the widget is clicked.
+    Checkable,
+    /// Make the widget scrollable.
+    Scrollable,
+    /// Allow elastic scrolling with slower movement.
+    ScrollElastic,
+    /// Enable momentum scrolling (continue scrolling when “thrown”).
+    ScrollMomentum,
+    /// Allow scrolling only one snappable child.
+    ScrollOne,
+    /// Propagate horizontal scrolling to the parent.
+    ScrollChainHor,
+    /// Propagate vertical scrolling to the parent.
+    ScrollChainVer,
+    /// Shorthand for (SCROLL_CHAIN_HOR | SCROLL_CHAIN_VER).
+    ScrollChain,
+    /// Automatically scroll to make the widget visible when focused.
+    ScrollOnFocus,
+    /// Allow scrolling the focused widget with arrow keys.
+    ScrollWithArrow,
+    /// Allow the widget to be snapped if the parent has scroll snapping enabled.
+    Snappable,
+    /// Keep the widget in the pressed state even if the pointer moves outside it.
+    PressLock,
+    /// Propagate events to the parent.
+    EventBubble,
+    /// Propagate events to children.
+    //EventTrickle,
+    /// Propagate state changes to children.
+    //StateTrickle,
+    /// Propagate gestures to the parent.
+    GestureBubble,
+    /// Enable more accurate hit (click) testing (e.g., account for rounded corners).
+    AdvHitTest,
+    /// Exclude the widget from layout positioning.
+    IgnoreLayout,
+    /// Do not scroll with the parent and ignore layout.
+    Floating,
+    /// Enable sending LV_EVENT_DRAW_TASK_ADDED events.
+    //SendDrawTaskEvents,
+    /// Allow children to overflow outside the widget's bounds.
+    OverflowVisible,
+    /// Start a new flex track on this item.
+    //FlexInNewTrack,
+    /// Custom flag, free to use by layouts.
+    Layout1,
+    /// Custom flag, free to use by layouts.
+    Layout2,
+    /// Custom flag, free to use by widgets.
+    Widget1,
+    /// Custom flag, free to use by widgets.
+    Widget2,
+    /// Custom flag, free to use by the user.
+    User1,
+    /// Custom flag, free to use by the user.
+    User2,
+    /// Custom flag, free to use by the user.
+    User3,
+    /// Custom flag, free to use by the user.
+    User4,
+}
+
+impl From<ObjFlag> for lvgl_sys::lv_obj_flag_t {
+    fn from(obj_flag: ObjFlag) -> Self {
+        let native_obj_flag = match obj_flag {
+            ObjFlag::Hidden => lvgl_sys::LV_OBJ_FLAG_HIDDEN,
+            ObjFlag::Clickable => lvgl_sys::LV_OBJ_FLAG_CLICKABLE,
+            ObjFlag::ClickFocusable => lvgl_sys::LV_OBJ_FLAG_CLICK_FOCUSABLE,
+            ObjFlag::Checkable => lvgl_sys::LV_OBJ_FLAG_CHECKABLE,
+            ObjFlag::Scrollable => lvgl_sys::LV_OBJ_FLAG_SCROLLABLE,
+            ObjFlag::ScrollElastic => lvgl_sys::LV_OBJ_FLAG_SCROLL_ELASTIC,
+            ObjFlag::ScrollMomentum => lvgl_sys::LV_OBJ_FLAG_SCROLL_MOMENTUM,
+            ObjFlag::ScrollOne => lvgl_sys::LV_OBJ_FLAG_SCROLL_ONE,
+            ObjFlag::ScrollChainHor => lvgl_sys::LV_OBJ_FLAG_SCROLL_CHAIN_HOR,
+            ObjFlag::ScrollChainVer => lvgl_sys::LV_OBJ_FLAG_SCROLL_CHAIN_VER,
+            ObjFlag::ScrollChain => lvgl_sys::LV_OBJ_FLAG_SCROLL_CHAIN,
+            ObjFlag::ScrollOnFocus => lvgl_sys::LV_OBJ_FLAG_SCROLL_ON_FOCUS,
+            ObjFlag::ScrollWithArrow => lvgl_sys::LV_OBJ_FLAG_SCROLL_WITH_ARROW,
+            ObjFlag::Snappable => lvgl_sys::LV_OBJ_FLAG_SNAPPABLE,
+            ObjFlag::PressLock => lvgl_sys::LV_OBJ_FLAG_PRESS_LOCK,
+            ObjFlag::EventBubble => lvgl_sys::LV_OBJ_FLAG_EVENT_BUBBLE,
+            //ObjFlag::EventTrickle => lvgl_sys::LV_OBJ_FLAG_EVENT_TRICKLE,
+            //ObjFlag::StateTrickle => lvgl_sys::LV_OBJ_FLAG_STATE_TRICKLE,
+            ObjFlag::GestureBubble => lvgl_sys::LV_OBJ_FLAG_GESTURE_BUBBLE,
+            ObjFlag::AdvHitTest => lvgl_sys::LV_OBJ_FLAG_ADV_HITTEST,
+            ObjFlag::IgnoreLayout => lvgl_sys::LV_OBJ_FLAG_IGNORE_LAYOUT,
+            ObjFlag::Floating => lvgl_sys::LV_OBJ_FLAG_FLOATING,
+            //ObjFlag::SendDrawTaskEvents => lvgl_sys::LV_OBJ_FLAG_SEND_DRAW_TASK_EVENTS,
+            ObjFlag::OverflowVisible => lvgl_sys::LV_OBJ_FLAG_OVERFLOW_VISIBLE,
+            //ObjFlag::FlexInNewTrack => lvgl_sys::LV_OBJ_FLAG_FLEX_IN_NEW_TRACK,
+            ObjFlag::Layout1 => lvgl_sys::LV_OBJ_FLAG_LAYOUT_1,
+            ObjFlag::Layout2 => lvgl_sys::LV_OBJ_FLAG_LAYOUT_2,
+            ObjFlag::Widget1 => lvgl_sys::LV_OBJ_FLAG_WIDGET_1,
+            ObjFlag::Widget2 => lvgl_sys::LV_OBJ_FLAG_WIDGET_2,
+            ObjFlag::User1 => lvgl_sys::LV_OBJ_FLAG_USER_1,
+            ObjFlag::User2 => lvgl_sys::LV_OBJ_FLAG_USER_2,
+            ObjFlag::User3 => lvgl_sys::LV_OBJ_FLAG_USER_3,
+            ObjFlag::User4 => lvgl_sys::LV_OBJ_FLAG_USER_4,
+        };
+        native_obj_flag as lvgl_sys::lv_obj_flag_t
+    }
+}
+
 #[cfg(test)]
 mod test {
     use super::*;
