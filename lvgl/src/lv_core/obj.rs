@@ -6,7 +6,7 @@
 //! `NativeObject`.
 
 use crate::lv_core::style::Style;
-use crate::{Align, LvError, LvResult, ObjFlag};
+use crate::{event_callback, Align, Box, Event, LvError, LvResult, ObjFlag};
 use core::{
     fmt::{self, Debug},
     marker::PhantomData,
@@ -70,6 +70,24 @@ impl<'a> Obj<'a> {
             }),
             None => Err(LvError::LvOOMemory),
         }
+    }
+
+    pub fn on_event<F>(&mut self, f: F) -> LvResult<()>
+    where
+        F: FnMut(Self, Event<<Self as Widget<'a>>::SpecialEvent>),
+    {
+        use NativeObject;
+        unsafe {
+            let obj = self.raw().as_mut();
+            obj.user_data = Box::into_raw(Box::new(f)) as *mut _;
+            lvgl_sys::lv_obj_add_event_cb(
+                obj,
+                lvgl_sys::lv_event_cb_t::Some(event_callback::<'a, Self, F>),
+                lvgl_sys::lv_event_code_t_LV_EVENT_ALL,
+                obj.user_data,
+            );
+        }
+        Ok(())
     }
 }
 
