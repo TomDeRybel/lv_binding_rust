@@ -20,8 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-use core::{ptr, usize};
-use cty::*;
+use core::{
+    ffi::{c_char, c_int, c_size_t},
+    ptr, usize,
+};
 
 #[no_mangle]
 pub unsafe extern "C" fn strchr(mut s: *const c_char, c: c_int) -> *mut c_char {
@@ -65,12 +67,12 @@ pub unsafe extern "C" fn strcpy(dst: *mut c_char, src: *const c_char) -> *mut c_
 }
 
 #[no_mangle]
-pub unsafe extern "C" fn strlen(s: *const c_char) -> size_t {
+pub unsafe extern "C" fn strlen(s: *const c_char) -> c_size_t {
     strnlen(s, usize::MAX)
 }
 
 #[no_mangle]
-pub unsafe extern "C" fn strnlen(s: *const c_char, size: size_t) -> size_t {
+pub unsafe extern "C" fn strnlen(s: *const c_char, size: c_size_t) -> c_size_t {
     let mut i = 0;
     while i < size {
         if *s.add(i) == 0 {
@@ -78,11 +80,11 @@ pub unsafe extern "C" fn strnlen(s: *const c_char, size: size_t) -> size_t {
         }
         i += 1;
     }
-    i as size_t
+    i as c_size_t
 }
 
 #[no_mangle]
-pub unsafe extern "C" fn strnlen_s(s: *const c_char, size: size_t) -> size_t {
+pub unsafe extern "C" fn strnlen_s(s: *const c_char, size: c_size_t) -> c_size_t {
     if s.is_null() {
         0
     } else {
@@ -96,7 +98,7 @@ pub unsafe extern "C" fn strcat(s1: *mut c_char, s2: *const c_char) -> *mut c_ch
 }
 
 #[no_mangle]
-pub unsafe extern "C" fn strncat(s1: *mut c_char, s2: *const c_char, n: size_t) -> *mut c_char {
+pub unsafe extern "C" fn strncat(s1: *mut c_char, s2: *const c_char, n: c_size_t) -> *mut c_char {
     let len = strlen(s1 as *const c_char);
     let mut i = 0;
     while i < n {
@@ -114,7 +116,7 @@ pub unsafe extern "C" fn strncat(s1: *mut c_char, s2: *const c_char, n: size_t) 
 }
 
 #[no_mangle]
-pub unsafe extern "C" fn strncmp(s1: *const c_char, s2: *const c_char, n: size_t) -> c_int {
+pub unsafe extern "C" fn strncmp(s1: *const c_char, s2: *const c_char, n: c_size_t) -> c_int {
     let mut i = 0;
     while i < n {
         let c1 = *s1.add(i);
@@ -128,7 +130,7 @@ pub unsafe extern "C" fn strncmp(s1: *const c_char, s2: *const c_char, n: size_t
 }
 
 #[no_mangle]
-pub unsafe extern "C" fn strncpy(dst: *mut c_char, src: *const c_char, n: size_t) -> *mut c_char {
+pub unsafe extern "C" fn strncpy(dst: *mut c_char, src: *const c_char, n: c_size_t) -> *mut c_char {
     let mut i = 0;
 
     while *src.add(i) != 0 && i < n {

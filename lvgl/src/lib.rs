@@ -12,6 +12,7 @@
 //! [1]: https://docs.lvgl.io/8.3/get-started/index.html
 //!
 
+#![feature(c_size_t)]
 #![cfg_attr(not(test), no_std)]
 #![cfg_attr(feature = "nightly", feature(cfg_accessible))]
 #![cfg_attr(feature = "nightly", feature(error_in_core))]

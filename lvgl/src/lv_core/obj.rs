@@ -7,9 +7,11 @@
 
 use crate::lv_core::style::Style;
 use crate::{Align, LvError, LvResult, ObjFlag};
-use core::fmt::{self, Debug};
-use core::marker::PhantomData;
-use core::ptr::{self, NonNull};
+use core::{
+    fmt::{self, Debug},
+    marker::PhantomData,
+    ptr::{self, NonNull},
+};
 
 /// Represents a native LVGL object.
 pub trait NativeObject {

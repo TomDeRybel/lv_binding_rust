@@ -16,10 +16,11 @@
 //! counterparts.
 
 use crate::{font::Font, Align, Box, Color, TextAlign};
-use core::fmt;
-use core::fmt::Debug;
-use core::mem::{self, MaybeUninit};
-use cty::c_uint;
+use core::{
+    ffi::c_uint,
+    fmt::{self, Debug},
+    mem::{self, MaybeUninit},
+};
 use paste::paste;
 
 #[cfg(feature = "lvgl_alloc")]
