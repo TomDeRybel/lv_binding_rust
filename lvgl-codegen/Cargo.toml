@@ -12,9 +12,9 @@ license = "MIT"
 repository = "https://github.com/rafaelcaricio/lvgl-rs"
 
 [dependencies]
-regex = "1.11.2"
-quote = "1.0.42"
+regex = "1.12.2"
+quote = "1.0.43"
 lazy_static = "1.5.0"
-proc-macro2 = "1.0.103"
+proc-macro2 = "1.0.105"
 Inflector = "0.11.4"
-syn = { version = "2.0.110", features = ["full"] }
+syn = { version = "2.0.113", features = ["full"] }
