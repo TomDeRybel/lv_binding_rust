@@ -13,8 +13,8 @@ repository = "https://github.com/rafaelcaricio/lvgl-rs"
 
 [dependencies]
 regex = "1.12.2"
-quote = "1.0.43"
+quote = "1.0.42"
 lazy_static = "1.5.0"
-proc-macro2 = "1.0.105"
+proc-macro2 = "1.0.104"
 Inflector = "0.11.4"
 syn = { version = "2.0.113", features = ["full"] }

@@ -85,8 +85,8 @@ unsafe_no_autoinit = []
 custom_allocator = []
 
 [build-dependencies]
-quote = "1.0.43"
-proc-macro2 = "1.0.105"
+quote = "1.0.42"
+proc-macro2 = "1.0.104"
 lvgl-codegen = { version = "0.6.2", path = "../lvgl-codegen" }
 lvgl-sys = { version = "0.6.2", path = "../lvgl-sys", features = [
     "raw-bindings",
