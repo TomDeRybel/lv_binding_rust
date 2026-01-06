@@ -327,9 +327,9 @@ pub struct Area {
 /// An update to the display information, contains the area that is being
 /// updated and the color of the pixels that need to be updated. The colors
 /// are represented in a contiguous array.
-pub struct DisplayRefresh<const N: usize> {
+pub struct DisplayRefresh<'a, const N: usize> {
     pub area: Area,
-    pub colors: [Color; N],
+    pub colors: &'a [Color; N],
 }
 
 #[cfg(feature = "embedded_graphics")]
@@ -377,11 +377,22 @@ unsafe extern "C" fn disp_flush_trampoline<'a, F, const N: usize>(
     if !display_driver.user_data.is_null() {
         let callback = &mut *(display_driver.user_data as *mut F);
 
-        let mut colors = [Color::default(); N];
-        for (color_len, color) in colors.iter_mut().enumerate() {
-            let lv_color = *color_p.add(color_len);
-            *color = Color::from_raw(lv_color);
-        }
+        // Build a slice from the pixel data, without copying the data itself.
+        //
+        // Safety
+        // - color_p points to the buffer(s) in the statically-allocated
+        //   DrawBuffer. When double-buffering, it will alternate between both.
+        // - The Color type is a `#[repr(transparent)]`, single-field struct
+        //   wrapper around lv_color_t. It is safe across the ffi and allows
+        //   the lv_color_t *mut raw pointer to be safely mutated into a *mut
+        //   Color raw pointer.
+        // <https://doc.rust-lang.org/nomicon/other-reprs.html#reprtransparent>
+        // <https://doc.rust-lang.org/core/slice/fn.from_raw_parts.html>
+        let colors: &[Color; N] = unsafe {
+            core::slice::from_raw_parts(color_p as *mut _ as *mut Color, N)
+                .try_into()
+                .unwrap()
+        };
 
         let update = DisplayRefresh {
             area: Area {
