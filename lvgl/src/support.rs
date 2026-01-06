@@ -61,6 +61,14 @@ impl From<LvError> for DisplayError {
 }
 
 /// An LVGL color. Equivalent to `lv_color_t`.
+///
+/// This uses the `newtype` design pattern. Combined with #[repr(transparent)],
+/// a thin wrapper around the C type is obtained that can be passed across the,
+/// and mutated into one-another. Both the struct and the inner field have the
+/// same ABI.
+/// <https://rust-unofficial.github.io/patterns/patterns/behavioural/newtype.html>
+/// <https://doc.rust-lang.org/nomicon/other-reprs.html#reprtransparent>
+#[repr(transparent)]
 #[derive(Copy, Clone, Default)]
 pub struct Color {
     pub(crate) raw: lvgl_sys::lv_color_t,
@@ -409,74 +417,109 @@ impl From<LabelLongMode> for u8 {
 /// For more detailed information on the flags, see:
 /// <https://docs.lvgl.io/master/details/common-widget-features/flags.html>
 ///
-/// Note: not all LVGL V9 flags are available in the old LVGL V8 used here.
+/// TODO: not all LVGL V9 flags are available in the old LVGL V8 used here.
 ///       Those flags are left commented-out.
+///
+/// TODO: perhaps use the bitflags! crate instead? See lvgl/lv_core/style.rs
+///       for an example.
 #[derive(Debug, Copy, Clone, Ord, PartialOrd, Eq, PartialEq)]
 pub enum ObjFlag {
     /// Make the widget hidden (as if it weren’t there at all).
     Hidden,
+
     /// Make the widget clickable by input devices.
     Clickable,
+
     /// Add the focused state to the widget when clicked.
     ClickFocusable,
+
     /// Toggle the checked state when the widget is clicked.
     Checkable,
+
     /// Make the widget scrollable.
     Scrollable,
+
     /// Allow elastic scrolling with slower movement.
     ScrollElastic,
+
     /// Enable momentum scrolling (continue scrolling when “thrown”).
     ScrollMomentum,
+
     /// Allow scrolling only one snappable child.
     ScrollOne,
+
     /// Propagate horizontal scrolling to the parent.
     ScrollChainHor,
+
     /// Propagate vertical scrolling to the parent.
     ScrollChainVer,
+
     /// Shorthand for (SCROLL_CHAIN_HOR | SCROLL_CHAIN_VER).
     ScrollChain,
+
     /// Automatically scroll to make the widget visible when focused.
     ScrollOnFocus,
+
     /// Allow scrolling the focused widget with arrow keys.
     ScrollWithArrow,
+
     /// Allow the widget to be snapped if the parent has scroll snapping enabled.
     Snappable,
+
     /// Keep the widget in the pressed state even if the pointer moves outside it.
     PressLock,
+
     /// Propagate events to the parent.
     EventBubble,
+
     /// Propagate events to children.
     //EventTrickle,
+
     /// Propagate state changes to children.
     //StateTrickle,
+
     /// Propagate gestures to the parent.
     GestureBubble,
+
     /// Enable more accurate hit (click) testing (e.g., account for rounded corners).
     AdvHitTest,
+
     /// Exclude the widget from layout positioning.
     IgnoreLayout,
+
     /// Do not scroll with the parent and ignore layout.
     Floating,
+
     /// Enable sending LV_EVENT_DRAW_TASK_ADDED events.
     //SendDrawTaskEvents,
+
     /// Allow children to overflow outside the widget's bounds.
     OverflowVisible,
+
     /// Start a new flex track on this item.
     //FlexInNewTrack,
+
     /// Custom flag, free to use by layouts.
     Layout1,
+
     /// Custom flag, free to use by layouts.
     Layout2,
+
     /// Custom flag, free to use by widgets.
     Widget1,
+
     /// Custom flag, free to use by widgets.
     Widget2,
+
     /// Custom flag, free to use by the user.
     User1,
+
     /// Custom flag, free to use by the user.
     User2,
+
     /// Custom flag, free to use by the user.
     User3,
+
     /// Custom flag, free to use by the user.
     User4,
 }
